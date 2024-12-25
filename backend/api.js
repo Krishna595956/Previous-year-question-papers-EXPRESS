@@ -3,7 +3,8 @@ const cors = require('cors');
 const upload = require('./upload');
 const path = require('path');
 const { MongoClient } = require('mongodb');
-const { insertSubject, findOne } = require('./subjectDB'); // Import the helper functions for DB
+const { insertSubject} = require('./subjectDB'); // Import the helper functions for DB
+const {findOne,insertOne} = require('./db')
 
 const app = express();
 const port = 3000;

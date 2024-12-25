@@ -48,10 +48,10 @@ async function find(query = {}) {
 }
 
 // Find a single document
-async function findOne(email) {
+async function findOne(query) {
   try {
     await client.connect();
-    const result = await collection.findOne(email);
+    const result = await collection.findOne(query);
     console.log('Document found:', result);
     return result;
   } catch (error) {

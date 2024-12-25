@@ -622,7 +622,7 @@ But remember, even a sleepy sloth can pass if it stays on the right branch! Hang
             <h3 class="card__heading">Information Technology</h3>
           </div>
         </a>
-        <a class="card" href="ai-mlyear.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="AI-ML">
           <div class="card__background" style="background-image: url(aiml.jpg)"></div>
           <div class="card__content">
             <p class="card__category">AI-ML</p>
@@ -709,5 +709,14 @@ But remember, even a sleepy sloth can pass if it stays on the right branch! Hang
             <p>&copy; 2024 EDU-VAULT. All rights reserved.</p>
         </div>
     </footer>  
+    <script>
+        function navigateToPage(event) {
+          event.preventDefault(); // Prevent default link behavior
+          localStorage.setItem("department",event.currentTarget.id);
+          alert(localStorage.getItem('department'));
+          window.location.href = event.currentTarget.href; // Manually navigate to the link
+        }
+      </script>
+      
 </body>
 </html>
