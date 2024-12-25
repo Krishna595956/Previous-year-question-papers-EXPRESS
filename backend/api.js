@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 // Static file serving for uploaded files
-app.use(express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 
 // MongoDB URI and Client Setup
 const uri = 'mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net'; // Your MongoDB connection string
@@ -124,6 +124,18 @@ app.post('/addSubject', upload, async (req, res) => {
     } else {
       res.status(400).json({ message: 'Failed to add subject' });
     }
+});
+
+app.get('/allSubjects', async (req, res) => {
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    const subjects = await collection.find({}).toArray();  // Fetch all documents
+    res.json(subjects);  // Send the documents as a JSON response
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch subjects', error: error.message });
+  }
 });
 
 // Start the server

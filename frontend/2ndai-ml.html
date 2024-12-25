@@ -81,6 +81,7 @@
     .rotate {
       transform: rotate(180deg);
     }
+    
   </style>
 </head>
 <body>
@@ -94,98 +95,148 @@
   </div>
 
   <script>
-    // Subjects and Options for different regulations
-    const subjectsByRegulation = {
-      'R20': [
-        "Probability &Statistics",
-        "Mathematical Foundations of ComputerScience",
-        "Data Structures & Algorithms",
-        "Object Oriented Programming throughJava",
-        "Introduction to Artificial Intelligence",
-        "Numerical Methods & TransformatioRens",
-        "Computer Organization ",
-        "Probability & Statistics",
-        "Formal Languages and Automata Theory",
-        "Database Management Systems",
-        "Managerial Economics and FinancialAccountancy"
-      ],
-
-      'R23': [
-        "Discrete Mathematics & Graph Theory",
-        "Object Oriented Programming Through Java",
-        "Universal Human Values",
-        "Advanced Data Structures &Algorithm",
-        "Python & Data Science",
-        "Optimization Techniques",
-        "Probability & Statistics",
-        "Machine Learning",
-        "Database Management Systems",
-        "Digital Logic & Computer Organization"
-      ]
-    };
-
+    // API URL for fetching subjects
+    const apiUrl = 'http://localhost:3000/allSubjects'; // Change to your actual API URL
+  
     const options = ["Syllabus", "Reference Textbooks", "Model Papers"];
-
-    // Function to generate dropdowns
+  
+    // Function to generate dropdowns dynamically based on subjects
     function generateDropdowns(subjects) {
       const dropdownsContainer = document.getElementById("dropdowns");
       dropdownsContainer.innerHTML = ''; // Clear existing dropdowns
-
+  
+      if (subjects.length === 0) {
+        return;
+      }
+  
       subjects.forEach((subject) => {
         // Create Dropdown Wrapper
         const dropdown = document.createElement("div");
         dropdown.classList.add("dropdown");
-
+  
         // Create Button
         const button = document.createElement("button");
         button.classList.add("dropdown-btn");
         button.innerHTML = `
-          ${subject}
+          ${subject.subject}
           <span>&#9662;</span>
         `;
-
+  
         // Create Dropdown Content
         const dropdownContent = document.createElement("div");
         dropdownContent.classList.add("dropdown-content");
-
+  
         options.forEach((option) => {
           const optionButton = document.createElement("button");
           optionButton.textContent = option;
-
-          optionButton.addEventListener("click", () => {
-            alert(`Selected "${option}" for "${subject}"`);
-            dropdownContent.style.display = "none";
-            button.querySelector("span").classList.remove("rotate");
-          });
-
+  
+          // Create View and Download buttons for each option
+          const actionButtonsContainer = document.createElement("div");
+          actionButtonsContainer.classList.add("action-buttons");
+  
+          const viewButton = createActionButton("View", subject, option, "view");
+          const downloadButton = createActionButton("Download", subject, option, "download");
+  
+          // Append buttons inline in the same row
+          actionButtonsContainer.appendChild(viewButton);
+          actionButtonsContainer.appendChild(downloadButton);
+  
+          // Add action buttons container next to the option button
           dropdownContent.appendChild(optionButton);
+          dropdownContent.appendChild(actionButtonsContainer);
         });
-
+  
         // Toggle Dropdown
         button.addEventListener("click", () => {
           const isVisible = dropdownContent.style.display === "block";
           document.querySelectorAll(".dropdown-content").forEach((content) => {
             content.style.display = "none";
           });
-
+  
           dropdownContent.style.display = isVisible ? "none" : "block";
           button.querySelector("span").classList.toggle("rotate", !isVisible);
         });
-
+  
         dropdown.appendChild(button);
         dropdown.appendChild(dropdownContent);
         dropdownsContainer.appendChild(dropdown);
       });
     }
+  
+    // Function to create action buttons (View or Download)
+    function createActionButton(label, subject, option, actionType) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.classList.add("action-btn");
 
-    // Initial generation of dropdowns
-    generateDropdowns(subjectsByRegulation['R20']);
+  // Base path for file retrieval (served via local server)
+  const basePath = "http://localhost:3000/backend/uploads/";
 
+  let filePath = "";
+  if (option === "Syllabus") {
+    filePath = basePath + subject.syllabus; // Prepend basePath to file name
+  } else if (option === "Reference Textbooks") {
+    filePath = basePath + subject.books;
+  } else if (option === "Model Papers") {
+    filePath = basePath + subject.questionPapers;
+  }
+
+  // Inline CSS styles for buttons
+  button.style.padding = "5px 15px";
+  button.style.marginRight = "10px";
+  button.style.border = "1px solid #ddd";
+  button.style.backgroundColor = "#f1f1f1";
+  button.style.cursor = "pointer";
+  button.style.fontSize = "14px";
+  button.style.transition = "background-color 0.3s";
+
+  // Hover effect for buttons
+  button.addEventListener("mouseover", () => {
+    button.style.backgroundColor = "#ddd";
+  });
+
+  button.addEventListener("mouseout", () => {
+    button.style.backgroundColor = "#f1f1f1";
+  });
+
+  // Handle button actions
+  if (actionType === "view") {
+    button.addEventListener("click", () => {
+      window.open(filePath, "_blank"); // Open the file in a new tab for viewing
+    });
+  } else if (actionType === "download") {
+    button.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = filePath;
+      a.download = filePath.split("/").pop(); // Extract file name from path for download
+      a.click();
+    });
+  }
+
+  return button;
+}
+
+    // Fetch subjects from the API based on selected regulation
+    async function fetchSubjects(regulation = "R20") {
+      try {
+        const response = await fetch(`${apiUrl}`);
+        if (!response.ok) throw new Error('Failed to fetch subjects');
+  
+        const subjects = await response.json();
+        generateDropdowns(subjects);
+      } catch (error) {
+        console.error('Error fetching subjects:', error);
+      }
+    }
+  
+    // Initial generation of dropdowns for default regulation (R20)
+    fetchSubjects();
+  
     // Handle regulation change
     document.getElementById("regulation").addEventListener("change", (e) => {
-      generateDropdowns(subjectsByRegulation[e.target.value]);
+      fetchSubjects(e.target.value);
     });
-
+  
     // Close Dropdowns When Clicking Outside
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".dropdown")) {
@@ -198,5 +249,6 @@
       }
     });
   </script>
-</body>
+  
+  </body>
 </html>

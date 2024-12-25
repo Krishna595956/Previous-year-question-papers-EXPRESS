@@ -18,13 +18,14 @@ async function insertSubject(collection, document) {
   }
 }
 
-async function findOne(query) {
-  try {
-    const collection = await connectDB();
-    return await collection.findOne(query);
-  } catch (error) {
-    throw new Error('Failed to find document: ' + error.message);
+async function findSubjects() {
+    try {
+      const collection = await connectDB();
+      const documents = await collection.find({}).toArray();
+      return documents;
+    } catch (error) {
+      throw new Error('Failed to fetch documents: ' + error.message);
+    }
   }
-}
 
-module.exports = { insertSubject, findOne };
+module.exports = { insertSubject, findSubjects };

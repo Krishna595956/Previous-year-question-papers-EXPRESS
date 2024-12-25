@@ -396,7 +396,7 @@
     </script>
   <section class="hero-section" style="margin-right: 0px;">
     <div class="card-grid" style="margin-right: 0px;">
-      <a  class="card" href="2ndai-ml.html">
+      <a  class="card" href="2ndai-ml.html" onclick="navigateToPage(event)" id="2">
         <div class="card__background" style="background-image: url(2ndyear.jpg);width: 390px;"></div>
         <div class="card__content">
           <p class="card__category">2nd</p>
@@ -420,5 +420,12 @@
     </div>
   </section>
   </div>
+  <script>
+      function navigateToPage(event) {
+    event.preventDefault(); // Prevent default link behavior
+    localStorage.setItem("year",event.currentTarget.id)
+    window.location.href = event.currentTarget.href; // Manually navigate to the link
+  }
+  </script>
 </body>
 </html>
