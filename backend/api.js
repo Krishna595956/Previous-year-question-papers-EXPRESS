@@ -47,6 +47,7 @@ app.post('/login', async (req, res) => {
     }
 
     if (email === 'admin123@gmail.com' && password === '1234567890') {
+      console.log("admin credentials");
       return res.status(200).json({ message: 'Admin login successful' });
     }
 
