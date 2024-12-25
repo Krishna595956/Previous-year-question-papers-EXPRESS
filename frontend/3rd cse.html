@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropdown Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .regulation-select {
+      width: 100%;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .regulation-select:hover {
+      border-color: #0056b3;
+    }
+
+    .dropdown {
+      margin-bottom: 15px;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .dropdown-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .dropdown-content {
+      display: none;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-top: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-content button {
+      width: 100%;
+      padding: 10px 15px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .dropdown-content button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .rotate {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Course Materials</h1>
+    <select class="regulation-select" id="regulation">
+      <option value="R20">R20</option>
+    </select>
+    <div id="dropdowns"></div>
+  </div>
+
+  <script>
+    // Subjects and Options for different regulations
+    const subjectsByRegulation = {
+      'R20': [
+        "Discrete Mathematics & Graph Theory",
+        "Software Engineering",
+        "Object Oriented Programming Through Java",
+        "Universal Human Values",
+        "Advanced Data Structures &Algorithm",
+        "Digital Logic &Computer Organization",
+        "Managerial Economics & Financial Analysis",
+        "Probability & Statistics",
+        "Operating systems",
+        "Database Management Systems",
+        "Python Programming"
+      ]
+    };
+
+    const options = ["Syllabus", "Reference Textbooks", "Model Papers"];
+
+    // Function to generate dropdowns
+    function generateDropdowns(subjects) {
+      const dropdownsContainer = document.getElementById("dropdowns");
+      dropdownsContainer.innerHTML = ''; // Clear existing dropdowns
+
+      subjects.forEach((subject) => {
+        // Create Dropdown Wrapper
+        const dropdown = document.createElement("div");
+        dropdown.classList.add("dropdown");
+
+        // Create Button
+        const button = document.createElement("button");
+        button.classList.add("dropdown-btn");
+        button.innerHTML = `
+          ${subject}
+          <span>&#9662;</span>
+        `;
+
+        // Create Dropdown Content
+        const dropdownContent = document.createElement("div");
+        dropdownContent.classList.add("dropdown-content");
+
+        options.forEach((option) => {
+          const optionButton = document.createElement("button");
+          optionButton.textContent = option;
+
+          optionButton.addEventListener("click", () => {
+            alert(`Selected "${option}" for "${subject}"`);
+            dropdownContent.style.display = "none";
+            button.querySelector("span").classList.remove("rotate");
+          });
+
+          dropdownContent.appendChild(optionButton);
+        });
+
+        // Toggle Dropdown
+        button.addEventListener("click", () => {
+          const isVisible = dropdownContent.style.display === "block";
+          document.querySelectorAll(".dropdown-content").forEach((content) => {
+            content.style.display = "none";
+          });
+
+          dropdownContent.style.display = isVisible ? "none" : "block";
+          button.querySelector("span").classList.toggle("rotate", !isVisible);
+        });
+
+        dropdown.appendChild(button);
+        dropdown.appendChild(dropdownContent);
+        dropdownsContainer.appendChild(dropdown);
+      });
+    }
+
+    // Initial generation of dropdowns
+    generateDropdowns(subjectsByRegulation['R20']);
+
+    // Handle regulation change
+    document.getElementById("regulation").addEventListener("change", (e) => {
+      generateDropdowns(subjectsByRegulation[e.target.value]);
+    });
+
+    // Close Dropdowns When Clicking Outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-content").forEach((content) => {
+          content.style.display = "none";
+        });
+        document.querySelectorAll(".dropdown-btn span").forEach((arrow) => {
+          arrow.classList.remove("rotate");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

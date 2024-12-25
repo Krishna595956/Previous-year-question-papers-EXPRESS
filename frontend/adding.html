@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Eduvault - Add Branch Details</title>
+</head>
+<body>
+    <div class="main">
+        <div class="container" id="branch-container">
+            <form class="form" id="branch-form">
+                <h2 class="form_title title">Add Branch Details</h2>
+                <input type="text" id="branch" placeholder="Branch" required>
+                <input type="text" id="year" placeholder="Year" required>
+                <input type="text" id="regulation" placeholder="Regulation" required>
+                <input type="text" id="subject" placeholder="Subject" required>
+                <input type="text" id="syllabus" placeholder="Syllabus File (e.g., syllabus.pdf)" required>
+                <input type="text" id="questionPapers" placeholder="Question Papers (comma separated)" required>
+                <input type="text" id="books" placeholder="Books (comma separated)" required>
+                <button type="button" onclick="addBranchDetails()">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function addBranchDetails() {
+            const branch = document.getElementById('branch').value;
+            const year = document.getElementById('year').value;
+            const regulation = document.getElementById('regulation').value;
+            const subject = document.getElementById('subject').value;
+            const syllabus = document.getElementById('syllabus').value;
+            const questionPapers = document.getElementById('questionPapers').value.split(',');
+            const books = document.getElementById('books').value.split(',');
+
+            const branchData = {
+                branch: branch,
+                years: [{
+                    year: year,
+                    regulations: [{
+                        regulation: regulation,
+                        subjects: [{
+                            name: subject,
+                            syllabus: syllabus,
+                            questionPapers: questionPapers,
+                            books: books
+                        }]
+                    }]
+                }]
+            };
+
+            const response = await fetch('http://localhost:3000/api/add-branch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(branchData)
+            });
+
+            const data = await response.json();
+            alert(data.message || 'Branch details added successfully!');
+        }
+    </script>
+</body>
+</html>

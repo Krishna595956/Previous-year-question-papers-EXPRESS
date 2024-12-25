@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple File Uploads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .vertical-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-left: 32%;
+            margin-top: 5%;
+        }
+
+        .upload-container {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 70%;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+
+        .reset-btn {
+            background-color: #f44336;
+        }
+
+        .reset-btn:hover {
+            background-color: #da190b;
+        }
+
+        .submit-btn {
+            background-color: #2196F3;
+        }
+
+        .submit-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-name {
+            font-size: 0.85rem;
+            color: #333;
+            word-break: break-all;
+            padding-right: 1rem;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="vertical-container">
+        <!-- Upload Section 1 -->
+        <div class="upload-container upload-section-1">
+            <h2>Syllabus</h2>
+            <div class="file-input-wrapper">
+                <input type="file" class="file-input" id="fileInput1" multiple>
+                <div class="button-group">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput1').click()">
+                        Choose Files
+                    </button>
+                    <button class="upload-btn submit-btn" id="submitBtn1" onclick="uploadFiles(1)" disabled>
+                        Upload Files
+                    </button>
+                    <button class="upload-btn reset-btn" onclick="resetFiles(1)">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <div class="error-message" id="errorMessage1"></div>
+            <div class="success-message" id="successMessage1"></div>
+            <div class="progress-bar" id="progressBar1">
+                <div class="progress" id="progress1"></div>
+            </div>
+            <div class="file-list" id="fileList1"></div>
+        </div>
+
+        <!-- Upload Section 2 -->
+        <div class="upload-container upload-section-2">
+            <h2>Notes</h2>
+            <div class="file-input-wrapper">
+                <input type="file" class="file-input" id="fileInput2" multiple>
+                <div class="button-group">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput2').click()">
+                        Choose Files
+                    </button>
+                    <button class="upload-btn submit-btn" id="submitBtn2" onclick="uploadFiles(2)" disabled>
+                        Upload Files
+                    </button>
+                    <button class="upload-btn reset-btn" onclick="resetFiles(2)">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <div class="error-message" id="errorMessage2"></div>
+            <div class="success-message" id="successMessage2"></div>
+            <div class="progress-bar" id="progressBar2">
+                <div class="progress" id="progress2"></div>
+            </div>
+            <div class="file-list" id="fileList2"></div>
+        </div>
+
+        <!-- Upload Section 3 -->
+        <div class="upload-container upload-section-3">
+            <h2>Previous Year Exam Papers</h2>
+            <div class="file-input-wrapper">
+                <input type="file" class="file-input" id="fileInput3" multiple>
+                <div class="button-group">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput3').click()">
+                        Choose Files
+                    </button>
+                    <button class="upload-btn submit-btn" id="submitBtn3" onclick="uploadFiles(3)" disabled>
+                        Upload Files
+                    </button>
+                    <button class="upload-btn reset-btn" onclick="resetFiles(3)">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <div class="error-message" id="errorMessage3"></div>
+            <div class="success-message" id="successMessage3"></div>
+            <div class="progress-bar" id="progressBar3">
+                <div class="progress" id="progress3"></div>
+            </div>
+            <div class="file-list" id="fileList3"></div>
+        </div>
+    </div>
+
+    <script>
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+        // Set up event listeners for all file inputs
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`fileInput${i}`).addEventListener('change', (event) => handleFileSelect(event, i));
+        }
+
+        function handleFileSelect(event, sectionNumber) {
+            const fileList = document.getElementById(`fileList${sectionNumber}`);
+            const errorMessage = document.getElementById(`errorMessage${sectionNumber}`);
+            const submitBtn = document.getElementById(`submitBtn${sectionNumber}`);
+            const successMessage = document.getElementById(`successMessage${sectionNumber}`);
+            const progressBar = document.getElementById(`progressBar${sectionNumber}`);
+            
+            fileList.innerHTML = '';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            progressBar.style.display = 'none';
+            
+            const files = event.target.files;
+            let hasError = false;
+
+            Array.from(files).forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+
+                if (file.size > MAX_FILE_SIZE) {
+                    hasError = true;
+                    errorMessage.textContent = `Error: ${file.name} exceeds the 5MB size limit`;
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                const fileName = document.createElement('div');
+                fileName.className = 'file-name';
+                fileName.textContent = file.name;
+
+                const fileSize = document.createElement('div');
+                fileSize.className = 'file-size';
+                fileSize.textContent = formatFileSize(file.size);
+
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(fileSize);
+                fileList.appendChild(fileItem);
+            });
+
+            if (hasError) {
+                resetFiles(sectionNumber);
+                submitBtn.disabled = true;
+            } else if (files.length > 0) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function resetFiles(sectionNumber) {
+            document.getElementById(`fileInput${sectionNumber}`).value = '';
+            document.getElementById(`fileList${sectionNumber}`).innerHTML = '';
+            document.getElementById(`errorMessage${sectionNumber}`).style.display = 'none';
+            document.getElementById(`successMessage${sectionNumber}`).style.display = 'none';
+            document.getElementById(`progressBar${sectionNumber}`).style.display = 'none';
+            document.getElementById(`submitBtn${sectionNumber}`).disabled = true;
+            document.getElementById(`progress${sectionNumber}`).style.width = '0%';
+        }
+
+        function uploadFiles(sectionNumber) {
+            const files = document.getElementById(`fileInput${sectionNumber}`).files;
+            const progressBar = document.getElementById(`progressBar${sectionNumber}`);
+            const progress = document.getElementById(`progress${sectionNumber}`);
+            const successMessage = document.getElementById(`successMessage${sectionNumber}`);
+            const submitBtn = document.getElementById(`submitBtn${sectionNumber}`);
+
+            if (files.length === 0) return;
+
+            // Show progress bar
+            progressBar.style.display = 'block';
+            submitBtn.disabled = true;
+
+            // Simulate upload progress
+            let currentProgress = 0;
+            const interval = setInterval(() => {
+                currentProgress += 5;
+                progress.style.width = `${currentProgress}%`;
+
+                if (currentProgress >= 100) {
+                    clearInterval(interval);
+                    successMessage.textContent = 'Files uploaded successfully!';
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        resetFiles(sectionNumber);
+                    }, 3000);
+                }
+            }, 100);
+
+            // Here you would normally implement the actual file upload logic
+            // using FormData and fetch/XMLHttpRequest to send files to your server
+        }
+    </script>
+</body>
+</html>

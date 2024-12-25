@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+  <style>
+    .top-buttons {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            gap: 10px; /* Space between buttons */
+        }
+
+        .top-buttons .btn-login,
+        .top-buttons .btn-register {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login {
+            background-color: #090909;
+            color: white;
+        }
+
+        .btn-register {
+            background-color: #0b0b0b; 
+            color: white;
+        }
+
+        .btn-login:hover {
+            background-color: #09a513; 
+        }
+
+        .btn-register:hover {
+            background-color: #6584ea; 
+        }
+    @import url('https://fonts.googleapis.com/css2?family=Belanosima&family=Rubik+Vinyl&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        body
+        {
+            margin: 0;
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+          
+            font-family: "Poppins", sans-serif;
+            background-image: linear-gradient(120deg, #9fa2a7 0%, #050505 100%);
+            flex-direction: column;
+        }
+        .spectacledcoder-sidenav
+        {
+            margin: 0;
+            width: 230px;
+            height: 943px;
+            background-color: rgba(3, 1, 9, 0.182);
+            border-radius: 0px;
+            border: 1px solid rgb(243, 235, 235);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.9s;
+            zoom: 0.9;
+            margin-left: 0%;
+            position: fixed; /* Make the sidebar fixed to the viewport */
+    left: 0; /* Align the sidebar to the left edge */
+    top: 0; /* Start at the top of the page */
+    height: 100vh;
+        } 
+        .spectacledcoder-sidenav .header
+        {
+           margin-top: 10px;
+            width: 100%;
+            height: 20%;
+            border-radius: 20px;
+            display: flex;
+            
+        }
+        .spectacledcoder-sidenav .header .profile
+        {
+           
+            margin-left: 10px;
+            margin-right: -8px;
+            width: 70%;
+            height: 60%;
+            display: flex;
+        }
+        .spectacledcoder-sidenav .header .profile .profile-pic
+        {
+         
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+        }
+        .spectacledcoder-sidenav .header .profile .profile-pic img
+        {
+            width: 1200%;
+            height: 300%;
+            border-radius: 50%;
+            margin-left: -15px;
+            margin-top: 0px;
+        
+        }
+    
+        .spectacledcoder-sidenav .header .btn
+        {
+            margin: auto;
+            width: 30%;
+            height: 60%;
+            display: flex;
+        }
+        .spectacledcoder-sidenav .header .btn .circle
+        {
+            margin: auto;
+            margin-right: -15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, white 50%, rgba(236, 230, 230, 0) 50%);
+            display: flex;
+            cursor: pointer;
+        }
+        .spectacledcoder-sidenav .header .btn .circle img
+        {
+            margin: auto;
+            margin-left: 5px;
+        }
+        .spectacledcoder-sidenav .menus
+        {
+            margin-top: -35px;
+            width: 100%;
+            height: 60%;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .spectacledcoder-sidenav .menus p
+        {
+            width: 50%;
+            height: 20px;
+            margin-left: 10px;
+            font-size: xx-small;
+        }
+        .spectacledcoder-sidenav .menus .menu-container
+        {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            margin-left: -8px;
+            margin-top: 0px;
+        }
+        .spectacledcoder-sidenav .menus .menu-container .menu
+        {
+            width: 90%;
+            height: 50px;
+            margin: auto;
+            display: flex;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .spectacledcoder-sidenav .menus .menu:hover
+        {
+            background-color: white;
+            box-shadow: 1px 1px 20px white;
+        }
+        .spectacledcoder-sidenav .menus .menu-container .menu .menu-img
+        {
+            margin: auto;
+            display: flex;
+            width: 20%;
+            height: 100%;
+        }
+        .spectacledcoder-sidenav .menus .menu-container .menu .menu-name
+        {
+            margin: auto;
+            display: flex;
+            width: 80%;
+            height: 50%;
+        }
+        .spectacledcoder-sidenav .menus .menu .menu-img img
+        {
+            margin: auto;
+        }
+        .spectacledcoder-sidenav .menus .menu .menu-name p 
+        {
+            height: fit-content;
+            font-size: x-small;
+            margin: auto;
+            margin-left: 0px;
+        }
+        .service
+        {
+            height: 30% !important;
+        }
+        .spectacledcoder-sidenav .footer
+        {
+            margin: auto;
+            width: 100%;
+            height: 20%;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 20px;
+            display: flex;
+        }
+        .spectacledcoder-sidenav .footer .create-task
+        {
+            width: 90%;
+            height: 80%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 15px;
+        }
+        .spectacledcoder-sidenav .footer .create-task img
+        {
+            margin: auto;
+            margin-bottom: 0px;
+            cursor: pointer;
+        }
+        .spectacledcoder-sidenav .footer .create-task img:hover
+        {
+            filter: drop-shadow(1px 1px 15px #313131);
+        }
+        .spectacledcoder-sidenav .footer .create-task p
+        {
+            font-size: x-small;
+            margin: auto;
+            margin-bottom: 0px;
+        }
+        .spectacledcoder-sidenav .footer .create-task span
+        {
+            font-size: 7px;
+            margin: auto;
+            margin-top: 0px;
+        }
+
+        .disclaimer
+        {
+            margin: auto;
+            width: fit-content;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            font-family: 'Belanosima', sans-serif;
+        }
+        .disclaimer a
+        {
+            text-decoration: none;
+            color: #202020;
+            font-family: "Kaushan Script", cursive;
+            font-weight: 900;
+        }
+        .disclaimer a:hover
+        {
+            text-decoration: overline;
+        }
+        
+    /* Add your CSS styles here */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 10px;
+      padding-bottom: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+    .hero-section {
+      width: 100%;
+      max-width: 1200px;
+      margin-left: 20px;
+    }
+    .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* First row with 5 cards */
+    gap: 20px;
+  }
+
+  .card-grid > a:nth-child(n+6) {
+    grid-column: span 1; /* Ensure second-row cards fit within 4 columns */
+    gap:60px;
+    
+  }
+
+  @media (max-width: 1200px) {
+    .card-grid {
+      grid-template-columns: repeat(4, 1fr); /* Adjust for smaller screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr); /* Stack cards for mobile view */
+    }
+  }
+    /*.card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }*/
+    .card {
+      display: block;
+      text-decoration: none;
+      border-radius: 15px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+    }
+    .card__background {
+      height: 200px;
+      width: 300px;
+      background-size: cover;
+      background-position: center;
+    }
+    .card__content {
+      padding: 15px;
+      background-color: #fff;
+    }
+    .card__category {
+      font-size: 0.9rem;
+      color: #888;
+      margin: 0;
+    }
+    .card__heading {
+      font-size: 1.2rem;
+      margin: 10px 0 0;
+      color: #333;
+    }
+    #b1{
+      display: flex;
+      padding-left: 0px;
+    }
+    #b1{
+        border-radius: 50px;
+        border: none;
+        padding-left: 2px;
+        padding-top: -10px;
+        padding-bottom: 10px;
+    
+    }
+  </style>
+</head>
+<body>
+    <script>
+        var toggler = document.getElementById("toggler");
+        var togglericon = document.getElementById("togglericon");
+        var sidenav = document.getElementById("sidenav");
+        var menuname = document.getElementsByClassName("menu-name");
+        var flag = 0;
+
+        function toggle() {
+            if (flag === 0) {
+                sidenav.style.width = "80px";
+                toggler.style.background = "linear-gradient(90deg, rgba(206, 191, 191, 0) 50%, white 50%)";
+                togglericon.src = "https://img.icons8.com/metro/26/forward.png";
+                togglericon.style.marginRight = "5px";
+
+                // Hide menu names
+                for (let index = 0; index < menuname.length; index++) {
+                    menuname[index].style.display = 'none';
+                }
+                flag = 1; // Update flag
+            } else {
+                sidenav.style.width = "250px";
+                toggler.style.background = "linear-gradient(90deg, white 50%, rgba(206, 191, 191, 0) 50%)";
+                togglericon.src = "https://img.icons8.com/metro/26/back.png";
+                togglericon.style.marginLeft = "5px";
+
+                // Show menu names
+                for (let index = 0; index < menuname.length; index++) {
+                    menuname[index].style.display = 'flex';
+                }
+                flag = 0; // Update flag
+            }
+        }
+    </script>
+  <section class="hero-section" style="margin-right: 0px;">
+    <div class="card-grid" style="margin-right: 0px;">
+      <a  class="card" href="2nd csd.html">
+        <div class="card__background" style="background-image: url(2nd\ year.jpg);width: 390px;"></div>
+        <div class="card__content">
+          <p class="card__category">2nd</p>
+          <button id="b1"><h3 class="card__heading" >Second Year</h3></button>
+        </div>
+        </a>
+      <a class="card" href="3rd cse.html">
+        <div class="card__background" style="background-image: url(3rd\ year.jpg);width: 390px;"></div>
+        <div class="card__content">
+          <p class="card__category">3rd</p>
+          <button id="b1"><h3 class="card__heading">Third Year</h3></button>
+        </div>
+      </a>
+      <a class="card" href="#">
+        <div class="card__background" style="background-image: url(4th\ year.jpg);width: 390px;"></div>
+        <div class="card__content">
+          <p class="card__category">4rth</p>
+          <button id="b1"><h3 class="card__heading">Fourth Year</h3></button>
+        </div>
+      </a>
+    </div>
+  </section>
+  </div>
+</body>
+</html>

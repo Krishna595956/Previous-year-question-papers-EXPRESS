@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropdown Menu</title>
+  <style>
+    .navbar {
+            background-color: #f1f2f3;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 2rem;
+            color: #060606;
+
+        }
+
+        .navbar-links a {
+            color: rgb(7, 7, 7);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #0b0b0b;
+                padding: 1rem;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .navbar-links.active {
+                display: flex;
+            }
+        }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .dropdown {
+      margin-bottom: 15px;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .dropdown-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .dropdown-content {
+      display: none;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-top: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-content button {
+      width: 100%;
+      padding: 10px 15px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .dropdown-content button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .rotate {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="navbar-brand">EDU-VAULT</a>
+    <button class="navbar-toggle">☰</button>
+    <div class="navbar-links">
+        <a href="#">Home</a>
+        <a href="#">About Us</a>
+        <a href="#hero-section">Departments</a>
+        <a href="#footer-section">Contact Us</a>
+</div>
+</nav>
+  <div class="container">
+    <h1>Course Materials</h1>
+    <div id="dropdowns"></div>
+  </div>
+  <script>
+    // Subjects and Options
+    const subjects = [
+        "Engineering-graphics",
+        "Beee", 
+        "English" ,
+        "Math1",
+        "Math2 ",
+        "Physics", 
+        "Chemistry ",
+        "Bcme",
+        "Cprogramming",
+        "Datastructures ",
+        "Engineering-workshop", 
+    ];
+
+    const options = ["Syllabus", "Reference Textbooks", "Model Papers"];
+
+    // Generate Dropdowns
+    const dropdownsContainer = document.getElementById("dropdowns");
+
+    subjects.forEach((subject) => {
+      // Create Dropdown Wrapper
+      const dropdown = document.createElement("div");
+      dropdown.classList.add("dropdown");
+
+      // Create Button
+      const button = document.createElement("button");
+      button.classList.add("dropdown-btn");
+      button.innerHTML = `
+        ${subject}
+        <span>&#9662;</span> <!-- Down Arrow -->
+      `;
+
+      // Create Dropdown Content
+      const dropdownContent = document.createElement("div");
+      dropdownContent.classList.add("dropdown-content");
+
+      options.forEach((option) => {
+        const optionButton = document.createElement("button");
+        optionButton.textContent = option;
+
+        // Option Click Handler
+        optionButton.addEventListener("click", () => {
+          alert(`Selected "${option}" for "${subject}"`);
+          dropdownContent.style.display = "none"; // Close dropdown
+          button.querySelector("span").classList.remove("rotate");
+        });
+
+        dropdownContent.appendChild(optionButton);
+      });
+
+      // Toggle Dropdown
+      button.addEventListener("click", () => {
+        const isVisible = dropdownContent.style.display === "block";
+        document.querySelectorAll(".dropdown-content").forEach((content) => {
+          content.style.display = "none"; // Close all dropdowns
+        });
+
+        // Toggle current dropdown
+        dropdownContent.style.display = isVisible ? "none" : "block";
+        button.querySelector("span").classList.toggle("rotate", !isVisible);
+      });
+
+      // Append Button and Content to Dropdown
+      dropdown.appendChild(button);
+      dropdown.appendChild(dropdownContent);
+
+      // Append Dropdown to Container
+      dropdownsContainer.appendChild(dropdown);
+    });
+
+    // Close Dropdowns When Clicking Outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-content").forEach((content) => {
+          content.style.display = "none";
+        });
+        document.querySelectorAll(".dropdown-btn span").forEach((arrow) => {
+          arrow.classList.remove("rotate");
+        });
+      }
+    });
+  </script>
+</body>
+</html>
