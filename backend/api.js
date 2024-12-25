@@ -17,7 +17,7 @@ app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 // MongoDB URI and Client Setup
-const uri = 'mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net'; // Your MongoDB connection string
+const uri = 'mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net/'; // Your MongoDB connection string
 const client = new MongoClient(uri);
 const dbName = 'Eduvault';
 const collectionName = 'subjects';
@@ -87,7 +87,7 @@ app.post('/addSubject', upload, async (req, res) => {
   const { branch, year, regulation, subject } = req.body;
 
   // Check if required fields are provided
-  if (!branch || !year || !regulation || !subject) {
+  if (!branch || !regulation || !subject) {
     return res.status(400).json({ message: 'All fields (branch, year, regulation, subject) are required' });
   }
 
@@ -128,15 +128,79 @@ app.post('/addSubject', upload, async (req, res) => {
 
 app.get('/allSubjects', async (req, res) => {
   try {
+    const { department, year, regulation } = req.query;  // Extract department, year, and regulation from query parameters
+    console.log(department,year,regulation);
+    // Build the query object
+    const query = {};
+
+    if (department) {
+      query.branch = department;  // If department is provided, filter by "branch"
+    }
+
+    if (year) {
+      query.year = year;  // If year is provided, filter by "year"
+    }
+
+    if (regulation) {
+      query.regulation = regulation;  // If regulation is provided, filter by "regulation"
+    }
+
     await client.connect();
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
-    const subjects = await collection.find({}).toArray();  // Fetch all documents
-    res.json(subjects);  // Send the documents as a JSON response
+
+    // Find subjects that match the query
+    const subjects = await collection.find(query).toArray();
+    console.log(subjects);
+
+    if (subjects.length === 0) {
+      return res.status(404).json({ message: 'No subjects found for the specified department, year, and regulation.' });
+    }
+
+    res.json(subjects);  // Send the matching subjects as a JSON response
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch subjects', error: error.message });
   }
 });
+
+
+app.get('/shSubjects', async (req, res) => {
+  try {
+    // Extract the regulation parameter from the query string
+    const { regulation } = req.query;
+
+    if (!regulation) {
+      return res.status(400).json({ message: 'Regulation is required.' });
+    }
+
+    // Build the query object
+    const query = {
+      branch: "S&H",    // Fixed condition for "branch" being "S&H"
+      regulation: regulation // Add regulation dynamically from query parameter
+    };
+
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+
+    // Find subjects that match the modified query
+    const subjects = await collection.find(query).toArray();
+
+    if (subjects.length === 0) {
+      return res.status(404).json({ message: 'No subjects found for the specified criteria.' });
+    }
+
+    res.json(subjects);  // Send the matching subjects as a JSON response
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch subjects', error: error.message });
+  } finally {
+    // Close the database connection
+    await client.close();
+  }
+});
+
+
+
 
 // Start the server
 app.listen(port, () => {

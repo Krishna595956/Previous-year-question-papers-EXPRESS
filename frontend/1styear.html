@@ -1,76 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dropdown Menu</title>
   <style>
-    .navbar {
-            background-color: #f1f2f3;
-            padding: 1rem 2rem;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar-brand {
-
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .navbar-links {
-            display: flex;
-            gap: 2rem;
-            color: #060606;
-
-        }
-
-        .navbar-links a {
-            color: rgb(7, 7, 7);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .navbar-toggle {
-                display: block;
-            }
-
-            .navbar-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: #0b0b0b;
-                padding: 1rem;
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .navbar-links.active {
-                display: flex;
-            }
-        }
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -81,6 +16,21 @@
     .container {
       max-width: 400px;
       margin: 0 auto;
+    }
+
+    .regulation-select {
+      width: 100%;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .regulation-select:hover {
+      border-color: #0056b3;
     }
 
     .dropdown {
@@ -134,104 +84,176 @@
     }
   </style>
 </head>
+
 <body>
-  <nav class="navbar">
-    <a href="#" class="navbar-brand">EDU-VAULT</a>
-    <button class="navbar-toggle">☰</button>
-    <div class="navbar-links">
-        <a href="#">Home</a>
-        <a href="#">About Us</a>
-        <a href="#hero-section">Departments</a>
-        <a href="#footer-section">Contact Us</a>
-</div>
-</nav>
   <div class="container">
     <h1>Course Materials</h1>
+    <select class="regulation-select" id="regulation">
+      <option value="R20">R20</option>
+      <option value="R23">R23</option>
+    </select>
     <div id="dropdowns"></div>
   </div>
-  <script>
-    // Subjects and Options
-    const subjects = [
-        "Engineering-graphics",
-        "Beee", 
-        "English" ,
-        "Math1",
-        "Math2 ",
-        "Physics", 
-        "Chemistry ",
-        "Bcme",
-        "Cprogramming",
-        "Datastructures ",
-        "Engineering-workshop", 
-    ];
 
-    const options = ["Syllabus", "Reference Textbooks", "Model Papers"];
+<script>
+  // API URL for fetching subjects
+const apiUrl = 'http://localhost:3000/shSubjects'; // Base URL of your API
 
-    // Generate Dropdowns
-    const dropdownsContainer = document.getElementById("dropdowns");
+const options = ["Syllabus", "Reference Textbooks", "Model Papers"];
 
-    subjects.forEach((subject) => {
-      // Create Dropdown Wrapper
-      const dropdown = document.createElement("div");
-      dropdown.classList.add("dropdown");
+// Function to generate dropdowns dynamically based on subjects
+function generateDropdowns(subjects) {
+  const dropdownsContainer = document.getElementById("dropdowns");
+  dropdownsContainer.innerHTML = ''; // Clear existing dropdowns
 
-      // Create Button
-      const button = document.createElement("button");
-      button.classList.add("dropdown-btn");
-      button.innerHTML = `
-        ${subject}
-        <span>&#9662;</span> <!-- Down Arrow -->
-      `;
+  if (subjects.length === 0) {
+    return;
+  }
 
-      // Create Dropdown Content
-      const dropdownContent = document.createElement("div");
-      dropdownContent.classList.add("dropdown-content");
+  subjects.forEach((subject) => {
+    // Create Dropdown Wrapper
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("dropdown");
 
-      options.forEach((option) => {
-        const optionButton = document.createElement("button");
-        optionButton.textContent = option;
+    // Create Button
+    const button = document.createElement("button");
+    button.classList.add("dropdown-btn");
+    button.innerHTML = `
+      ${subject.subject}
+      <span>&#9662;</span>
+    `;
 
-        // Option Click Handler
-        optionButton.addEventListener("click", () => {
-          alert(`Selected "${option}" for "${subject}"`);
-          dropdownContent.style.display = "none"; // Close dropdown
-          button.querySelector("span").classList.remove("rotate");
-        });
+    // Create Dropdown Content
+    const dropdownContent = document.createElement("div");
+    dropdownContent.classList.add("dropdown-content");
 
-        dropdownContent.appendChild(optionButton);
-      });
+    options.forEach((option) => {
+      const optionButton = document.createElement("button");
+      optionButton.textContent = option;
 
-      // Toggle Dropdown
-      button.addEventListener("click", () => {
-        const isVisible = dropdownContent.style.display === "block";
-        document.querySelectorAll(".dropdown-content").forEach((content) => {
-          content.style.display = "none"; // Close all dropdowns
-        });
+      // Create View and Download buttons for each option
+      const actionButtonsContainer = document.createElement("div");
+      actionButtonsContainer.classList.add("action-buttons");
 
-        // Toggle current dropdown
-        dropdownContent.style.display = isVisible ? "none" : "block";
-        button.querySelector("span").classList.toggle("rotate", !isVisible);
-      });
+      const viewButton = createActionButton("View", subject, option, "view");
+      const downloadButton = createActionButton("Download", subject, option, "download");
 
-      // Append Button and Content to Dropdown
-      dropdown.appendChild(button);
-      dropdown.appendChild(dropdownContent);
+      // Append buttons inline in the same row
+      actionButtonsContainer.appendChild(viewButton);
+      actionButtonsContainer.appendChild(downloadButton);
 
-      // Append Dropdown to Container
-      dropdownsContainer.appendChild(dropdown);
+      // Add action buttons container next to the option button
+      dropdownContent.appendChild(optionButton);
+      dropdownContent.appendChild(actionButtonsContainer);
     });
 
-    // Close Dropdowns When Clicking Outside
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".dropdown")) {
-        document.querySelectorAll(".dropdown-content").forEach((content) => {
-          content.style.display = "none";
-        });
-        document.querySelectorAll(".dropdown-btn span").forEach((arrow) => {
-          arrow.classList.remove("rotate");
-        });
-      }
+    // Toggle Dropdown
+    button.addEventListener("click", () => {
+      const isVisible = dropdownContent.style.display === "block";
+      document.querySelectorAll(".dropdown-content").forEach((content) => {
+        content.style.display = "none";
+      });
+
+      dropdownContent.style.display = isVisible ? "none" : "block";
+      button.querySelector("span").classList.toggle("rotate", !isVisible);
     });
-  </script>
+
+    dropdown.appendChild(button);
+    dropdown.appendChild(dropdownContent);
+    dropdownsContainer.appendChild(dropdown);
+  });
+}
+
+// Function to create action buttons (View or Download)
+function createActionButton(label, subject, option, actionType) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.classList.add("action-btn");
+
+  // Base path for file retrieval (ensure trailing slash for proper concatenation)
+  const basePath = "http://localhost:3000/";
+
+  let filePath = "";
+  if (option === "Syllabus") {
+    filePath = basePath + subject.syllabus; // Prepend basePath to file name
+  } else if (option === "Reference Textbooks") {
+    filePath = basePath + subject.books;
+  } else if (option === "Model Papers") {
+    filePath = basePath + subject.questionPapers;
+  }
+
+  // Inline CSS styles for buttons
+  button.style.padding = "5px 15px";
+  button.style.marginRight = "10px";
+  button.style.border = "1px solid #ddd";
+  button.style.backgroundColor = "#f1f1f1";
+  button.style.cursor = "pointer";
+  button.style.fontSize = "14px";
+  button.style.transition = "background-color 0.3s";
+
+  // Hover effect for buttons
+  button.addEventListener("mouseover", () => {
+    button.style.backgroundColor = "#ddd";
+  });
+
+  button.addEventListener("mouseout", () => {
+    button.style.backgroundColor = "#f1f1f1";
+  });
+
+  // Handle button actions
+  if (actionType === "view") {
+    button.addEventListener("click", () => {
+      window.open(filePath, "_blank"); // Open the file in a new tab for viewing
+    });
+  } else if (actionType === "download") {
+    button.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = filePath;
+      a.download = filePath.split("/").pop(); // Extract file name from path for download
+      a.click();
+    });
+  }
+
+  return button;
+}
+
+// Fetch subjects from the API based on selected regulation
+async function fetchSubjects(regulation) {
+  try {
+    const response = await fetch(`${apiUrl}?regulation=${regulation}`); // Send regulation as query param
+
+    if (!response.ok) throw new Error('Failed to fetch subjects');
+
+    const subjects = await response.json();
+    generateDropdowns(subjects);
+  } catch (error) {
+    console.error('Error fetching subjects:', error);
+  }
+}
+
+// Initial generation of dropdowns
+const regulationSelect = document.getElementById("regulation");
+fetchSubjects(regulationSelect.value); // Fetch initial subjects for the default regulation
+
+// Handle regulation change
+regulationSelect.addEventListener("change", (e) => {
+  fetchSubjects(e.target.value); // Fetch subjects for the selected regulation
+});
+
+// Close Dropdowns When Clicking Outside
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".dropdown")) {
+    document.querySelectorAll(".dropdown-content").forEach((content) => {
+      content.style.display = "none";
+    });
+    document.querySelectorAll(".dropdown-btn span").forEach((arrow) => {
+      arrow.classList.remove("rotate");
+    });
+  }
+});
+
+</script>
+
 </body>
+
 </html>

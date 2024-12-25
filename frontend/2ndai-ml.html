@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,9 +82,9 @@
     .rotate {
       transform: rotate(180deg);
     }
-    
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Course Materials</h1>
@@ -103,12 +104,20 @@
     // Function to generate dropdowns dynamically based on subjects
     function generateDropdowns(subjects) {
       const dropdownsContainer = document.getElementById("dropdowns");
+      const body = document.querySelector("body");
+      
       dropdownsContainer.innerHTML = ''; // Clear existing dropdowns
   
       if (subjects.length === 0) {
+        // Show message if no subjects are found
+        const noSubjectsMessage = document.createElement("p");
+        noSubjectsMessage.classList.add("no-subjects");
+        noSubjectsMessage.textContent = "No subjects available for the selected department, year, and regulation.";
+        body.appendChild(noSubjectsMessage);
         return;
       }
   
+      // Otherwise, generate dropdowns as normal
       subjects.forEach((subject) => {
         // Create Dropdown Wrapper
         const dropdown = document.createElement("div");
@@ -165,62 +174,91 @@
   
     // Function to create action buttons (View or Download)
     function createActionButton(label, subject, option, actionType) {
-  const button = document.createElement("button");
-  button.textContent = label;
-  button.classList.add("action-btn");
-
-  // Base path for file retrieval (served via local server)
-  const basePath = "http://localhost:3000/backend/uploads/";
-
-  let filePath = "";
-  if (option === "Syllabus") {
-    filePath = basePath + subject.syllabus; // Prepend basePath to file name
-  } else if (option === "Reference Textbooks") {
-    filePath = basePath + subject.books;
-  } else if (option === "Model Papers") {
-    filePath = basePath + subject.questionPapers;
-  }
-
-  // Inline CSS styles for buttons
-  button.style.padding = "5px 15px";
-  button.style.marginRight = "10px";
-  button.style.border = "1px solid #ddd";
-  button.style.backgroundColor = "#f1f1f1";
-  button.style.cursor = "pointer";
-  button.style.fontSize = "14px";
-  button.style.transition = "background-color 0.3s";
-
-  // Hover effect for buttons
-  button.addEventListener("mouseover", () => {
-    button.style.backgroundColor = "#ddd";
-  });
-
-  button.addEventListener("mouseout", () => {
-    button.style.backgroundColor = "#f1f1f1";
-  });
-
-  // Handle button actions
-  if (actionType === "view") {
-    button.addEventListener("click", () => {
-      window.open(filePath, "_blank"); // Open the file in a new tab for viewing
-    });
-  } else if (actionType === "download") {
-    button.addEventListener("click", () => {
-      const a = document.createElement("a");
-      a.href = filePath;
-      a.download = filePath.split("/").pop(); // Extract file name from path for download
-      a.click();
-    });
-  }
-
-  return button;
-}
-
-    // Fetch subjects from the API based on selected regulation
-    async function fetchSubjects(regulation = "R20") {
+      const button = document.createElement("button");
+      button.textContent = label;
+      button.classList.add("action-btn");
+  
+      // Base path for file retrieval (ensure trailing slash for proper concatenation)
+      const basePath = "http://localhost:3000/";
+  
+      let filePath = "";
+      if (option === "Syllabus") {
+        filePath = basePath + subject.syllabus; // Prepend basePath to file name
+      } else if (option === "Reference Textbooks") {
+        filePath = basePath + subject.books;
+      } else if (option === "Model Papers") {
+        filePath = basePath + subject.questionPapers;
+      }
+  
+      // Inline CSS styles for buttons
+      button.style.padding = "5px 15px";
+      button.style.marginRight = "10px";
+      button.style.border = "1px solid #ddd";
+      button.style.backgroundColor = "#f1f1f1";
+      button.style.cursor = "pointer";
+      button.style.fontSize = "14px";
+      button.style.transition = "background-color 0.3s";
+  
+      // Hover effect for buttons
+      button.addEventListener("mouseover", () => {
+        button.style.backgroundColor = "#ddd";
+      });
+  
+      button.addEventListener("mouseout", () => {
+        button.style.backgroundColor = "#f1f1f1";
+      });
+  
+      // Handle button actions
+      if (actionType === "view") {
+        button.addEventListener("click", () => {
+          window.open(filePath, "_blank"); // Open the file in a new tab for viewing
+        });
+      } else if (actionType === "download") {
+        button.addEventListener("click", () => {
+          const a = document.createElement("a");
+          a.href = filePath;
+          a.download = filePath.split("/").pop(); // Extract file name from path for download
+          a.click();
+        });
+      }
+  
+      return button;
+    }
+  
+    // Fetch subjects from the API based on selected regulation, department, and year
+    async function fetchSubjects() {
       try {
-        const response = await fetch(`${apiUrl}`);
-        if (!response.ok) throw new Error('Failed to fetch subjects');
+        // Clear previous data
+        const dropdownsContainer = document.getElementById('dropdowns');
+        dropdownsContainer.innerHTML = '';
+  
+        // Retrieve department and year from local storage
+        const department = localStorage.getItem('department');
+        const year = localStorage.getItem('year');
+        const regulation = document.getElementById('regulation').value; // Get selected regulation
+        
+        console.log(department, year, regulation);
+  
+        if (!department || !year) {
+          console.error('Department or year is not set in local storage.');
+          return;
+        }
+  
+        // Construct query string with department, year, and regulation
+        const queryString = `?department=${department}&year=${year}&regulation=${regulation}`;
+  
+        // Send GET request to the API with query parameters
+        const response = await fetch(apiUrl + queryString);
+  
+        if (!response.ok) {
+          if (response.status === 404) {
+            // If 404 is received, show "No Data Found" message
+            dropdownsContainer.innerHTML = '<p>No Data Found for the selected department, year, and regulation.</p>';
+          } else {
+            throw new Error('Failed to fetch subjects');
+          }
+          return;
+        }
   
         const subjects = await response.json();
         generateDropdowns(subjects);
@@ -230,11 +268,13 @@
     }
   
     // Initial generation of dropdowns for default regulation (R20)
-    fetchSubjects();
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchSubjects();  // Fetch subjects when the page is loaded
+    });
   
     // Handle regulation change
     document.getElementById("regulation").addEventListener("change", (e) => {
-      fetchSubjects(e.target.value);
+      fetchSubjects(); // Fetch subjects when regulation is changed
     });
   
     // Close Dropdowns When Clicking Outside
@@ -250,5 +290,8 @@
     });
   </script>
   
-  </body>
+  
+
+</body>
+
 </html>

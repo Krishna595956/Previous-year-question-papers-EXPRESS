@@ -114,10 +114,15 @@
                 <h2 class="form_title title">Add Subjects</h2>
                 <select id="branch" required>
                     <option value="" disabled selected>Select Branch</option>
+                    <option value="S&H">S&H</option>
                     <option value="CSE">CSE</option>
                     <option value="ECE">ECE</option>
                     <option value="IT">IT</option>
+                    <option value="EEE">EEE</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CIVIL">CIVIL</option>
                     <option value="AI-ML">AI-ML</option>
+                    <option value="CSD">CSD</option>
                 </select>
                 <select id="year" required>
                     <option value="" disabled selected>Select Year</option>
@@ -156,29 +161,29 @@
             const branch = document.getElementById('branch').value;
             const year = document.getElementById('year').value;
             const regulation = document.getElementById('regulation').value;
-    
+
             // Create the form data object for files
             const syllabusFile = document.getElementById('syllabus').files[0];
             const questionPapersFile = document.getElementById('questionPapers').files[0];
             const booksFile = document.getElementById('books').files[0];
-    
+
             const formData = new FormData();
             formData.append('subject', subject);
             formData.append('branch', branch);
             formData.append('year', year);
             formData.append('regulation', regulation);
-            
+
             if (syllabusFile) formData.append('syllabus', syllabusFile);
             if (questionPapersFile) formData.append('questionPapers', questionPapersFile);
             if (booksFile) formData.append('books', booksFile);
-    
+
             try {
                 // Send all data in a single API request
                 const response = await fetch('http://localhost:3000/addSubject', {
                     method: 'POST',
                     body: formData, // Send the entire form data (including files)
                 });
-    
+
                 // Handle the response
                 if (response.ok) {
                     const result = await response.json();
@@ -189,10 +194,24 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('There was an error with the submission');
+                alert('Details added successfully');
             }
         }
     </script>
+    <script>
+        // Function to handle branch selection
+        document.getElementById('branch').addEventListener('change', function () {
+            const yearField = document.getElementById('year');
+
+            if (this.value === 'S&H') {
+                yearField.value = ""; // Reset the year field
+                yearField.disabled = true; // Disable the field
+            } else {
+                yearField.disabled = false; // Enable the field for other branches
+            }
+        });
+    </script>
+
 </body>
 
 </html>

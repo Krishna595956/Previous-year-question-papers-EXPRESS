@@ -601,21 +601,21 @@ But remember, even a sleepy sloth can pass if it stays on the right branch! Hang
     </div>
     <section class="hero-section" id="hero-section">
       <div class="card-grid" id="branch-cards">
-        <a class="card" href="1st year.html">
+        <a class="card" href="1styear.html" onclick="navigateToPage(event)" id="S&H">
           <div class="card__background" style="background-image: url(s&h.jpg)"></div>
           <div class="card__content">
             <p class="card__category">S&H</p>
             <h3 class="card__heading">Science & Humanities</h3>
           </div>
         </a>
-        <a class="card" href="/select-year?branch=Computer%20Science">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="CSE">
           <div class="card__background" style="background-image: url(cse.jpg)"></div>
           <div class="card__content">
             <p class="card__category">CSE</p>
             <h3 class="card__heading">Computer Science Engineering</h3>
           </div>
         </a>
-        <a class="card" href="ityear.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="IT">
           <div class="card__background" style="background-image: url(it.jpg)"></div>
           <div class="card__content">
             <p class="card__category">IT</p>
@@ -629,35 +629,35 @@ But remember, even a sleepy sloth can pass if it stays on the right branch! Hang
             <h3 class="card__heading">Aritificial Intelligence - Machine Learning</h3>
           </div>
         </a>
-        <a class="card" href="csd year.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="CSD">
           <div class="card__background" style="background-image: url(csd.jpg)"></div>
           <div class="card__content">
             <p class="card__category">CSD</p>
             <h3 class="card__heading">Data Science</h3>
           </div>
         </a>
-        <a class="card" href="ece year.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="ECE">
           <div class="card__background" style="background-image: url(ece.jpg)"></div>
           <div class="card__content">
             <p class="card__category">ECE</p>
             <h3 class="card__heading">Electronics and Communication Engineering</h3>
           </div>
         </a>
-        <a class="card" href="eee year.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="EEE">
           <div class="card__background" style="background-image: url(eee.jpg)"></div>
           <div class="card__content">
             <p class="card__category">EEE</p>
             <h3 class="card__heading">Electrical & Eletronics Engineering</h3>
           </div>
         </a>
-        <a class="card" href="mech year.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="MECH">
           <div class="card__background" style="background-image: url(mech.jpg)"></div>
           <div class="card__content">
             <p class="card__category">MECH</p>
             <h3 class="card__heading">Mechanical Engineering</h3>
           </div>
         </a>
-        <a class="card" href="civil year.html">
+        <a class="card" href="ai-mlyear.html" onclick="navigateToPage(event)" id="CIVIL">
           <div class="card__background" style="background-image: url(civil.jpg)"></div>
           <div class="card__content">
             <p class="card__category">CIVIL</p>
@@ -713,7 +713,6 @@ But remember, even a sleepy sloth can pass if it stays on the right branch! Hang
         function navigateToPage(event) {
           event.preventDefault(); // Prevent default link behavior
           localStorage.setItem("department",event.currentTarget.id);
-          alert(localStorage.getItem('department'));
           window.location.href = event.currentTarget.href; // Manually navigate to the link
         }
       </script>
