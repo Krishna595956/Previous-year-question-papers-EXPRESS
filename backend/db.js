@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const client = new MongoClient('mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net/');
+const client = new MongoClient('');
 const db = client.db('Eduvault');
 const collection = db.collection('users');
 
